@@ -4,6 +4,8 @@
 
 #include <SDL2/SDL_ttf.h>
 
+#include <string.h>
+
 SDL_Point DrawText(Font* font, const char* text,
 				   int x, int y,
 				   int halign, int valign,
@@ -107,7 +109,7 @@ SDL_Point MeasureText(Font* font, const char* text) {
 void LoadFont(Font* font, const char* fname, int ptsize) {
 	font->ptsize = ptsize;
 	font->glyphs = (GlyphData*) malloc(95 * sizeof(GlyphData));
-	SDL_memset(font->glyphs, 0, 95 * sizeof(GlyphData));
+	memset(font->glyphs, 0, 95 * sizeof(GlyphData));
 
 	int atlas_width = 256;
 	int atlas_height = 256;

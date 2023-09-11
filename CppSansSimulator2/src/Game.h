@@ -2,13 +2,19 @@
 
 #include "Battle.h"
 
+#include "Font.h"
+
+#include <SDL2/SDL_mixer.h>
+
+#include <variant>
+
 #define GAME_W 640
 #define GAME_H 480
 #define GAME_FPS 60
 
 enum GameState {
-	STATE_IN_BATTLE,
-	STATE_OVERWORLD
+	IN_BATTLE,
+	OVERWORLD
 };
 
 struct Game {
@@ -16,11 +22,17 @@ struct Game {
 	SDL_Renderer* renderer;
 	bool quit;
 	float time;
-	GameState state;
 
-	union {
-		Battle battle{};
-	};
+	Sprite spr_player_heart;
+	Sprite spr_bone_h;
+	Sprite spr_bone_v;
+	Sprite spr_gaster_blaster;
+
+	SpriteGroup sprite_group;
+
+	Font fnt_determination_mono;
+
+	std::variant<Battle> state;
 
 	void Init();
 	void Quit();
