@@ -4,6 +4,8 @@
 
 #include <SDL2/SDL_image.h>
 
+#include <math.h>
+
 #define SPRITE_GROUP_ATLAS_W 1024
 #define SPRITE_GROUP_ATLAS_H 1024
 
