@@ -2,10 +2,13 @@
 
 #include "misc.h"
 
+Game* game = nullptr;
+
 void Game::Init() {
 	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 
-	SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_AUDIO
+			 | SDL_INIT_VIDEO);
 
 	window = SDL_CreateWindow("CppSansSimulator2",
 							  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
