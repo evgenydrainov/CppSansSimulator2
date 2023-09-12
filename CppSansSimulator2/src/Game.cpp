@@ -27,19 +27,16 @@ void Game::Init() {
 								  SDL_RENDERER_ACCELERATED
 								  | SDL_RENDERER_TARGETTEXTURE);
 
+	SDL_RenderSetLogicalSize(renderer, GAME_W, GAME_H);
+
 	InitSpriteGroup(&sprite_group);
 	{
-		LoadSprite(&spr_player_heart, &sprite_group, ASSETS_DIR "spr_player_heart.png");
-		LoadSprite(&spr_bone_h, &sprite_group, ASSETS_DIR "spr_bone_h.png");
-		LoadSprite(&spr_bone_v, &sprite_group, ASSETS_DIR "spr_bone_v.png");
-		LoadSprite(&spr_gaster_blaster, &sprite_group, ASSETS_DIR "spr_gaster_blaster.png");
+		LoadSprite(&spr_player_heart,	&sprite_group, ASSETS_DIR "spr_player_heart.png");
+		LoadSprite(&spr_bone_h,			&sprite_group, ASSETS_DIR "spr_bone_h.png");
+		LoadSprite(&spr_bone_v,			&sprite_group, ASSETS_DIR "spr_bone_v.png");
+		LoadSprite(&spr_gaster_blaster,	&sprite_group, ASSETS_DIR "spr_gaster_blaster.png");
 	}
 	FinalizeSpriteGroup(&sprite_group);
-
-	spr_player_heart.texture = spr_player_heart.group->atlas_texture[spr_player_heart.group_index];
-	spr_bone_h.texture = spr_bone_h.group->atlas_texture[spr_bone_h.group_index];
-	spr_bone_v.texture = spr_bone_v.group->atlas_texture[spr_bone_v.group_index];
-	spr_gaster_blaster.texture = spr_gaster_blaster.group->atlas_texture[spr_gaster_blaster.group_index];
 
 	LoadFont(&fnt_determination_mono, ASSETS_DIR "DeterminationMono.ttf", 32);
 

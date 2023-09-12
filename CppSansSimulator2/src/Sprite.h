@@ -40,6 +40,10 @@ void DrawSprite(Sprite* sprite, int frame_index,
 				float angle = 0.0f, float xscale = 1.0f, float yscale = 1.0f,
 				SDL_Color color = {255, 255, 255, 255});
 
+void DrawSprite(Sprite* sprite,
+				const SDL_Rect* _src, const SDL_FRect* _dest,
+				SDL_Color color = {255, 255, 255, 255});
+
 void LoadSprite(Sprite* sprite, SpriteGroup* group, const char* fname,
 				int frame_count = 1, int frames_in_row = 1, float anim_spd = 0.0f, int loop_frame = 0,
 				int xorigin = INT_MAX, int yorigin = INT_MAX);

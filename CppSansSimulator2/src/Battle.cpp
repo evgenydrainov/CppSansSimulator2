@@ -250,7 +250,7 @@ void Battle::Update(float delta) {
 						blaster.start_y = std::stof(current_action.args[i++]);
 						blaster.end_x = std::stof(current_action.args[i++]);
 						blaster.end_y = std::stof(current_action.args[i++]);
-						blaster.end_angle = std::stof(current_action.args[i++]);
+						blaster.end_angle = -1.0f * std::stof(current_action.args[i++]);
 						blaster.spin_time = std::stof(current_action.args[i++]);
 						blaster.blast_time = std::stof(current_action.args[i++]);
 						blaster.x = blaster.start_x;
@@ -400,6 +400,20 @@ void Battle::Update(float delta) {
 	}
 }
 
+static void draw_bone_v(float x, float y, float height, SDL_Color c = COLOR_WHITE) {
+	SDL_Rect top_src = {0, 0, 10, 6};
+	SDL_FRect top_dest = {x, y, 10.0f, 6.0f};
+	DrawSprite(&game->spr_bone_v, &top_src, &top_dest, c);
+
+	SDL_Rect middle_src = {0, 6, 10, 12};
+	SDL_FRect middle_dest = {x, y + 6.0f, 10.0f, height - 12.0f};
+	DrawSprite(&game->spr_bone_v, &middle_src, &middle_dest, c);
+
+	SDL_Rect bottom_src = {0, 18, 10, 6};
+	SDL_FRect bottom_dest = {x, y + height - 6.0f, 10.0f, 6.0f};
+	DrawSprite(&game->spr_bone_v, &bottom_src, &bottom_dest, c);
+}
+
 void Battle::Draw(float delta) {
 	{
 		SDL_SetRenderDrawColor(game->renderer, 255, 255, 255, 255);
@@ -435,41 +449,23 @@ void Battle::Draw(float delta) {
 
 	for (Bone& bone : bones) {
 		if (bone.orient == 0) {
-			if (bone.color == 1) {
-				SDL_SetTextureColorMod(game->spr_bone_h.texture, 128, 128, 255);
-			} else {
-				SDL_SetTextureColorMod(game->spr_bone_h.texture, 255, 255, 255);
-			}
+			SDL_Color c = (bone.color == 1) ? SDL_Color{128, 128, 255, 255} : COLOR_WHITE;
 
-			SDL_Rect left_src = {game->spr_bone_h.u, game->spr_bone_h.v, 6, 10};
+			SDL_Rect left_src = {0, 0, 6, 10};
 			SDL_FRect left_dest = {bone.x, bone.y, 6.0f, 10.0f};
-			SDL_RenderCopyF(game->renderer, game->spr_bone_h.texture, &left_src, &left_dest);
+			DrawSprite(&game->spr_bone_h, &left_src, &left_dest, c);
 
-			SDL_Rect middle_src = {game->spr_bone_h.u + 6, game->spr_bone_h.v, 12, 10};
+			SDL_Rect middle_src = {6, 0, 12, 10};
 			SDL_FRect middle_dest = {bone.x + 6.0f, bone.y, bone.width - 12.0f, 10.0f};
-			SDL_RenderCopyF(game->renderer, game->spr_bone_h.texture, &middle_src, &middle_dest);
+			DrawSprite(&game->spr_bone_h, &middle_src, &middle_dest, c);
 
-			SDL_Rect right_src = {game->spr_bone_h.u + 18, game->spr_bone_h.v, 6, 10};
+			SDL_Rect right_src = {18, 0, 6, 10};
 			SDL_FRect right_dest = {bone.x + bone.width - 6.0f, bone.y, 6.0f, 10.0f};
-			SDL_RenderCopyF(game->renderer, game->spr_bone_h.texture, &right_src, &right_dest);
+			DrawSprite(&game->spr_bone_h, &right_src, &right_dest, c);
 		} else {
-			if (bone.color == 1) {
-				SDL_SetTextureColorMod(game->spr_bone_v.texture, 128, 128, 255);
-			} else {
-				SDL_SetTextureColorMod(game->spr_bone_v.texture, 255, 255, 255);
-			}
+			SDL_Color c = (bone.color == 1) ? SDL_Color{128, 128, 255, 255} : COLOR_WHITE;
 
-			SDL_Rect top_src = {game->spr_bone_v.u, game->spr_bone_v.v, 10, 6};
-			SDL_FRect top_dest = {bone.x, bone.y, 10.0f, 6.0f};
-			SDL_RenderCopyF(game->renderer, game->spr_bone_v.texture, &top_src, &top_dest);
-
-			SDL_Rect middle_src = {game->spr_bone_v.u, game->spr_bone_v.v + 6, 10, 12};
-			SDL_FRect middle_dest = {bone.x, bone.y + 6.0f, 10.0f, bone.height - 12.0f};
-			SDL_RenderCopyF(game->renderer, game->spr_bone_v.texture, &middle_src, &middle_dest);
-
-			SDL_Rect bottom_src = {game->spr_bone_v.u, game->spr_bone_v.v + 18, 10, 6};
-			SDL_FRect bottom_dest = {bone.x, bone.y + bone.height - 6.0f, 10.0f, 6.0f};
-			SDL_RenderCopyF(game->renderer, game->spr_bone_v.texture, &bottom_src, &bottom_dest);
+			draw_bone_v(bone.x, bone.y, bone.height, c);
 		}
 	}
 
@@ -485,10 +481,7 @@ void Battle::Draw(float delta) {
 		} else {
 			for (float x = border_x1; x < border_x2; x += 12.0f) {
 				float y = border_y2 - bone_stab_dist;
-				SDL_Rect src = {game->spr_bone_v.u, game->spr_bone_v.v, game->spr_bone_v.width, game->spr_bone_v.height};
-				SDL_FRect dest = {x, y, 10.0f, bone_stab_dist};
-				SDL_SetTextureColorMod(game->spr_bone_v.texture, 255, 255, 255);
-				SDL_RenderCopyF(game->renderer, game->spr_bone_v.texture, &src, &dest);
+				draw_bone_v(x, y, bone_stab_dist);
 			}
 		}
 	}
@@ -496,10 +489,9 @@ void Battle::Draw(float delta) {
 	if (clipping) SDL_RenderSetClipRect(game->renderer, nullptr);
 
 	for (GasterBlaster& blaster : blasters) {
-		SDL_Rect src = {game->spr_gaster_blaster.u, game->spr_gaster_blaster.v, game->spr_gaster_blaster.width, game->spr_gaster_blaster.height};
-		SDL_FRect dest = {blaster.x - 28.0f * blaster.size, blaster.y - 22.0f * blaster.size, 57.0f * blaster.size, 44.0f * blaster.size};
-		SDL_SetTextureColorMod(game->spr_gaster_blaster.texture, 255, 255, 255);
-		SDL_RenderCopyExF(game->renderer, game->spr_gaster_blaster.texture, &src, &dest, blaster.angle, nullptr, SDL_FLIP_NONE);
+		float x = blaster.x;
+		float y = blaster.y;
+		DrawSprite(&game->spr_gaster_blaster, 0, x, y, blaster.angle, blaster.size, blaster.size);
 	}
 
 	DrawText(&game->fnt_determination_mono, attack_list[attack_index], 0, 0);

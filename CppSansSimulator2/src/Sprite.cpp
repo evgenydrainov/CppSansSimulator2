@@ -52,6 +52,24 @@ void DrawSprite(Sprite* sprite, int frame_index,
 	SDL_RenderCopyExF(game->renderer, sprite->texture, &src, &dest, AngleToSDL(angle), &center, (SDL_RendererFlip) flip);
 }
 
+void DrawSprite(Sprite* sprite,
+				const SDL_Rect* _src, const SDL_FRect* _dest,
+				SDL_Color color) {
+	if (!sprite->texture) {
+		sprite->texture = sprite->group->atlas_texture[sprite->group_index];
+	}
+
+	SDL_Rect src;
+	src.x = sprite->u + _src->x;
+	src.y = sprite->v + _src->y;
+	src.w = _src->w;
+	src.h = _src->h;
+
+	SDL_SetTextureColorMod(sprite->texture, color.r, color.g, color.b);
+	SDL_SetTextureAlphaMod(sprite->texture, color.a);
+	SDL_RenderCopyExF(game->renderer, sprite->texture, &src, _dest, 0.0, nullptr, SDL_FLIP_NONE);
+}
+
 void LoadSprite(Sprite* sprite, SpriteGroup* group, const char* fname,
 				int frame_count, int frames_in_row, float anim_spd, int loop_frame,
 				int xorigin, int yorigin) {
