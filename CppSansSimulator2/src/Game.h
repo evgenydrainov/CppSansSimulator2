@@ -12,7 +12,7 @@
 #define GAME_H 480
 #define GAME_FPS 60
 
-enum GameState {
+enum struct GameState {
 	IN_BATTLE,
 	OVERWORLD
 };

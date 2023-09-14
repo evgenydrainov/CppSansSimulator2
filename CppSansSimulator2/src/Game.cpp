@@ -44,9 +44,9 @@ void Game::Init() {
 }
 
 void Game::Quit() {
-	switch (state.index()) {
-		case GameState::IN_BATTLE: std::get<GameState::IN_BATTLE>(state).Quit(); break;
-	}
+	std::visit([](auto&& arg) {
+		arg.Quit();
+	}, state);
 
 	DestroySpriteGroup(&sprite_group);
 
@@ -96,9 +96,9 @@ void Game::Frame() {
 }
 
 void Game::Update(float delta) {
-	switch (state.index()) {
-		case GameState::IN_BATTLE: std::get<GameState::IN_BATTLE>(state).Update(delta); break;
-	}
+	std::visit([delta](auto&& arg) {
+		arg.Update(delta);
+	}, state);
 
 	time += delta;
 }
@@ -107,9 +107,9 @@ void Game::Draw(float delta) {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 
-	switch (state.index()) {
-		case GameState::IN_BATTLE: std::get<GameState::IN_BATTLE>(state).Draw(delta); break;
-	}
+	std::visit([delta](auto&& arg) {
+		arg.Draw(delta);
+	}, state);
 
 	SDL_RenderPresent(renderer);
 }
